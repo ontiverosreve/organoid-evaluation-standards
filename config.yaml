@@ -1,0 +1,126 @@
+experiment:
+  name: 'Stage C: drug/control classification on organoid MEA (Trujillo et al. 2019)'
+  script: run_drug_classification.py
+  script_date: '2026-09-19'
+  script_version: null
+  release_built: '2026-09-19'
+  release_builder: make_release.py
+data:
+  dataset: Trujillo et al. 2019 cortical organoid MEA (Zenodo record 4751759, CC-BY-4.0)
+  input_files:
+  - role: control (baseline)
+    filename: LFP_Sp_161217.mat
+    bytes: 1283529863
+    sha256: f8328c074773cddd371134eda6cb14182eb34e734a1261513d05a5133a8ae95e
+    note: 'post-drug file from same recording date: same organoid age'
+  - role: drug (post-drug, 15 min after compound addition)
+    filename: LFP_Sp_161217_Drugs.mat
+    bytes: 1357743120
+    sha256: e680bf7c1d5a3a2bf8d1f959ac6d440a5a83b6101913f234efdeead37cdc6780
+    note: drug class pharmacologically heterogeneous; per-well compound mapping not
+      in files
+  well: 4
+  channels: 64
+  spike_clock_hz: 12500.0
+  mat_format: HDF5-based .mat read via h5py; variables 'spikes' (64x12 cell of spike-time
+    vectors in samples), 't_s'
+  baseline_bins: 4874
+  drugs_bins: 4819
+  baseline_dur_s: 243.7
+  drugs_dur_s: 241.0
+  baseline_total_spikes: 146960
+  drugs_total_spikes: 288616
+preprocessing:
+  script: bin_cache.py
+  cached_intermediate: 'binned_well4.npz (keys: baseline, drugs, baseline_dur, drugs_dur,
+    baseline_raw, drugs_raw)'
+  bin_width_s: 0.05
+  binning: per-electrode spike counts per 50 ms bin, np.clip to [0, n_bins-1]
+  standardization: 'per channel, per file: (rates - mean) / (std + 1e-9)'
+  block_len_bins: 200
+  block_len_s: 10.0
+  n_blocks_per_file: 24
+  total_blocks: 48
+  class_balance: 24 control / 24 drug
+  block_start_s: in-file block index * 10.0
+  note: only the first 4800 bins of each file are used; trailing bins (baseline 74
+    bins / 3.7 s, drugs 19 bins / 0.95 s) are unused
+reservoir:
+  n_nodes: 150
+  spectral_radius: 0.9
+  sparsity: 0.1
+  W_res_distribution: Uniform(-1, 1), masked by Bernoulli(0.1), then scaled by 0.9
+    / max|eig|
+  W_in_distribution: Uniform(-1, 1) with no separate input scaling
+  update: x[i] = (1-alpha)*x[i-1] + alpha*tanh(W_res @ x[i-1] + W_in @ u[i-1]); x[0]
+    = 0
+  summary_state: mean over the 200 time steps
+  rng: 'np.random.default_rng(seed) with the exact draw order: W_res values, W_res
+    mask, (eigvals), W_in'
+readout:
+  type: ridge regression on one-hot 2-class targets
+  lambda: 0.001
+  quality_weighting: sqrt weights in the normal equations; weight = max(1 - dead_fraction,
+    0.1), dead_fraction = mean(channel_std < 1e-3)
+  prediction: argmax of readout scores over all 48 blocks
+sweep:
+  alphas:
+  - 0.005
+  - 0.01
+  - 0.02
+  seeds:
+  - 7
+  - 11
+  - 22
+  best_alpha_selection: max mean accuracy; three-way tie at 1.000 -> first (0.005)
+  best_alpha: 0.005
+  detail_seed: 11
+  detail_seed_selection: median-accuracy seed; all accuracies 1.000 -> argsort index
+    1 -> seed 11
+splits:
+  interleaved: arange(48) % 3 != 0 -> train (32), else test (16); test blocks are
+    in-file indices 2,5,8,11,14,17,20,23 per file (8 control / 8 drug)
+  chronological: in-file block index < 16 -> train (32), else test (16); 16 train
+    + 8 test per file
+regime_probe:
+  original: 0.15 relative-distance rule on class centroids; flagged 48/48 on real
+    150-dim states (centroid separation 0.21 << typical state norm 2.42) -> degenerate,
+    superseded
+  calibrated: project states onto normalized discriminative direction (W_out[:,1]-W_out[:,0]);
+    per-class mean/std from TRAIN stats; flag |z| > 2.0
+  semantics: flag-only; predictions are NEVER inverted. A drug/control change is a
+    genuine physiological regime change, not a labeling error.
+  flags:
+    n_flagged: 6
+    flagged_blocks:
+    - 4
+    - 6
+    - 21
+    - 30
+    - 39
+    - 45
+    all_toward_other_regime: true
+label_shuffle_null:
+  reps: 20
+  convention: verbatim from diagnose2.py
+  rng_seed: 1
+  reservoir_seed: 11
+  alpha: 0.005
+  split: interleaved
+  ridge: UNWEIGHTED (differs from the canonical quality-weighted pipeline; documented
+    so the table matches the computation behind the headline claim)
+  result:
+    mean: 0.5
+    max: 0.75
+    n_at_1.0: 0
+headline_claims:
+- test accuracy 1.000 at alpha in {0.005, 0.01, 0.02}, each across seeds {7, 11, 22}
+  (interleaved split)
+- test accuracy 1.000 on chronological split (alpha=0.005, seeds {7, 11, 22})
+- '20-rep label-shuffle null: max <= 0.750, 0/20 reach 1.0'
+- calibrated probe flags 6/48 blocks for review, never inverting predictions
+known_limitations:
+- 'labels are file-level: ''drug'' is confounded with recording session'
+- drug class is pharmacologically heterogeneous (no per-well compound mapping in the
+  files)
+- block 39's control-like burst supports but does not prove network bistability

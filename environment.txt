@@ -1,0 +1,9 @@
+# Stage C release environment (pinned 2026-09-19)
+python==3.12.3
+numpy==1.26.4
+SciPy==1.11.4
+matplotlib==3.6.3
+h5py==3.16.0
+PyYAML==6.0.1
+# Note: the Stage C scripts import numpy, matplotlib, and h5py directly.
+# scipy is pinned (requested) but is not imported by any script in the Stage C pipeline.
