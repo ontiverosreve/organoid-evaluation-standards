@@ -1,4 +1,4 @@
-# Open Evaluation Standard for Organoid-Intelligence Claims — v0.1
+# Open Evaluation Standard for Organoid-Intelligence Claims — v0.2
 
 **Status:** Draft for comment. Not ratified by any body. Intended to live at
 `github.com/ontiverosreve/organoid-evaluation-standards`.
@@ -50,15 +50,24 @@ entirely artifactual. Only controls that ask what the classifier does when the
 
 The rule: **a claim that cannot survive its nulls is a claim about the nulls.**
 
+This failure family is not unique to retrospective data. Running reservoir
+computing on live human cultures on the CL1 closed-loop platform, Kagan's group
+found independently that RC decoders required "strict artifact control and
+trial-based cross-validation to distinguish network computation from artifactual
+signal separability or temporal data leakage" before any architecture
+comparison could be interpreted (Loeffler et al. 2026, bioRxiv
+10.64898/2026.08.10.743829). The decoder reading the rig instead of the tissue
+is the rule, not the exception.
+
 ---
 
 ## 3. Required null controls for classifier-based claims
 
-All five controls below are **required** for any published or preprinted claim
+All six controls below are **required** for any published or preprinted claim
 of the form "classifier X distinguishes conditions A and B in neural recordings."
 Each control gets a verdict: **pass**, **fail**, or **not applicable (with
 written justification)**. A fail on 3.1 or 3.2 withdraws the headline claim. A
-fail on 3.3–3.5 qualifies it (see criteria).
+fail on 3.3–3.6 qualifies it (see criteria).
 
 ### 3.1 Session-identity control (required)
 
@@ -104,6 +113,13 @@ being evaluated on the recording's future.
   classifier is reading within-recording temporal structure, not a
   condition-level effect.
 
+For decoders with state carryover (e.g., reservoir time-bin decoding),
+cross-validation folds must additionally respect trial/stimulation-epoch
+boundaries — no trial may be split across train and test. Where time-bin
+decoding is used, report holdout-over-trials alongside any holdout-over-time;
+holdout-over-time alone leaks adjacent bins from the same trial across the
+split and inflates accuracy.
+
 ### 3.4 Within-recording stability check (required)
 
 Split a single recording into first half vs. second half and classify halves.
@@ -133,6 +149,24 @@ Preprocessing choices change what the classifier is allowed to read. Per-file
 standardization, for example, removes mean-rate differences by construction.
 **State exactly what your preprocessing removes**, and run the rate-only
 baseline on the *unstandardized* data so the comparison is honest.
+
+### 3.6 Stimulation-artifact control (required where inputs are delivered by electrical stimulation)
+
+Report decoder accuracy with stimulation artifacts removed/blanked versus
+retained. The headline claim must survive artifact removal; accuracy that
+collapses when the stimulus waveform is blanked is a claim about the
+stimulator, not the tissue.
+
+- **Pass:** accuracy with artifacts blanked is consistent with the headline
+  (within the shuffle-null spread of §3.2).
+- **Fail:** accuracy collapses when the stimulus waveform is removed. The
+  decoder is reading the input signal, not network computation. Withdraw the
+  computation claim.
+
+This control complements §3.1 rather than replacing it: 3.1 asks what the
+pipeline reads across sessions when the condition is held fixed; 3.6 asks
+what it reads within a run when the neural response is held fixed and only
+the stimulation artifact is removed.
 
 ---
 
@@ -183,6 +217,9 @@ Every claim under this standard ships with:
 
 1. **Data provenance:** dataset identifier, file names, sizes, SHA-256 hashes,
    license, and the exact subset used (well, organoid, channels, time ranges).
+   Include culture architecture (2D monolayer / 3D organoid / modular
+   microfluidic) and cell lineage (e.g., cortical, hippocampal) where known —
+   architecture shapes decoding performance and must be part of the record.
 2. **N blocks and files:** number of blocks per condition, block length,
    number of recording sessions per condition, and the **recording order**
    (which session was recorded when, at what dose).
@@ -193,7 +230,7 @@ Every claim under this standard ships with:
    "max mean accuracy; ties broken by first").
 5. **Headline numbers with seeds:** accuracy per hyperparameter × seed, for
    every split (interleaved and chronological).
-6. **Null-control numbers:** for 3.1–3.5 and 4.1, the same granularity —
+6. **Null-control numbers:** for 3.1–3.6 and 4.1, the same granularity —
    never a mean without its max and its seed-wise spread.
 7. **Machine-readable release:** configuration file, run tables (one row per
    run), block tables (one row per block: file, index, label, prediction,
@@ -248,12 +285,20 @@ proves it. The standard distinguishes these two outcomes; that is its job.
 
 - **v0.1** (2026-09-29): initial draft. Covers classifier-based claims on
   extracellular electrophysiology and dose/intervention claims.
+- **v0.2** (2026-09-30): cites Loeffler et al. 2026 (bioRxiv
+  10.64898/2026.08.10.743829) as independent confirmation of the failure
+  family; adds §3.6 stimulation-artifact control; requires trial-respecting
+  CV folds in §3.3 for state-carryover decoders; adds culture architecture
+  and cell lineage to the §5 provenance checklist.
 - Amendments are proposed as issues/pull requests on the public repository,
   with a worked example (pass or fail) attached. A control earns its place by
   killing a real headline, not by sounding prudent.
 - Planned extensions: closed-loop learning claims, calcium-imaging claims,
   multi-lab replication criteria, and organoid-held-out generalization
-  standards.
+  standards. The closed-loop extension should absorb decoding-method
+  guidance (e.g., frequency-domain vs. time-bin decoding) and decoder-bias
+  controls alongside the artifact and trial-respecting controls already
+  established by Loeffler et al. 2026.
 
 *The future is grown, not built. But it has to be grown honestly — and honesty
 needs a checklist.*
