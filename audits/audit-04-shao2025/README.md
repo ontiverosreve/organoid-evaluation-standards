@@ -211,4 +211,4 @@ Session-identity nulls:
 - `code/make_plots.py` — figures
 - `cache/` — per-(experiment, culture, day) feature matrices (not for sharing)
 - `results/` — CSVs listed above; `run_log.txt`
-- `plots/` — `day1_vs_day3.png`, `window_comparison.png`, `cross_day_transfer.png`
+- `plots/` — `day1_vs_day3.svg`, `window_comparison.svg`, `cross_day_transfer.svg`
