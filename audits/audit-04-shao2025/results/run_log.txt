@@ -1,0 +1,140 @@
+A two_pattern c1 d1: npat=4 acc(paper)=0.991
+A two_pattern c1 d2: npat=4 acc(paper)=0.999
+A two_pattern c1 d3: npat=4 acc(paper)=0.994
+A two_pattern c2 d1: npat=4 acc(paper)=0.999
+A two_pattern c2 d2: npat=3 acc(paper)=0.999
+A two_pattern c2 d3: npat=4 acc(paper)=0.999
+A two_pattern c3 d1: npat=4 acc(paper)=0.999
+A two_pattern c3 d2: npat=4 acc(paper)=0.999
+A two_pattern c3 d3: npat=4 acc(paper)=0.999
+A two_pattern c4 d1: npat=4 acc(paper)=0.999
+A two_pattern c4 d2: npat=4 acc(paper)=0.991
+A two_pattern c4 d3: npat=4 acc(paper)=0.988
+A two_pattern c5 d1: npat=4 acc(paper)=0.809
+A two_pattern c5 d3: npat=2 acc(paper)=0.978
+A two_pattern c6 d1: npat=4 acc(paper)=0.885
+A two_pattern c6 d2: npat=4 acc(paper)=0.901
+A two_pattern c6 d3: npat=4 acc(paper)=0.880
+A two_pattern c7 d1: npat=4 acc(paper)=0.906
+A two_pattern c7 d2: npat=3 acc(paper)=0.949
+A two_pattern c7 d3: npat=2 acc(paper)=0.995
+A two_pattern c8 d1: npat=3 acc(paper)=1.000
+A two_pattern c8 d2: npat=3 acc(paper)=0.999
+A two_pattern c8 d3: npat=3 acc(paper)=0.999
+A two_pattern c9 d1: npat=3 acc(paper)=0.999
+A two_pattern c9 d2: npat=4 acc(paper)=0.997
+A two_pattern c9 d3: npat=4 acc(paper)=0.992
+A two_pattern c10 d1: npat=4 acc(paper)=0.991
+A two_pattern c10 d2: npat=4 acc(paper)=0.973
+A two_pattern c10 d3: npat=4 acc(paper)=0.857
+A six_pattern c1 d1: npat=6 acc(paper)=0.937
+A six_pattern c1 d2: npat=6 acc(paper)=0.930
+A six_pattern c1 d3: npat=6 acc(paper)=0.875
+A six_pattern c2 d1: npat=6 acc(paper)=0.906
+A six_pattern c2 d2: npat=6 acc(paper)=0.922
+A six_pattern c2 d3: npat=6 acc(paper)=0.948
+A six_pattern c3 d1: npat=6 acc(paper)=0.789
+A six_pattern c3 d2: npat=6 acc(paper)=0.988
+A six_pattern c3 d3: npat=6 acc(paper)=0.788
+A six_pattern c4 d1: npat=6 acc(paper)=0.906
+A six_pattern c4 d2: npat=6 acc(paper)=0.466
+A six_pattern c4 d3: npat=6 acc(paper)=0.851
+A six_pattern c5 d1: npat=6 acc(paper)=0.875
+A six_pattern c5 d2: npat=6 acc(paper)=0.965
+A six_pattern c5 d3: npat=6 acc(paper)=0.975
+A six_pattern c6 d1: npat=6 acc(paper)=0.908
+A six_pattern c6 d2: npat=6 acc(paper)=0.935
+A six_pattern c6 d3: npat=6 acc(paper)=0.983
+A six_pattern c7 d1: npat=6 acc(paper)=0.906
+A six_pattern c7 d2: npat=6 acc(paper)=0.820
+A six_pattern c8 d1: npat=6 acc(paper)=0.934
+A six_pattern c8 d2: npat=6 acc(paper)=0.909
+A six_pattern c9 d1: npat=6 acc(paper)=0.948
+A six_pattern c9 d3: npat=6 acc(paper)=0.995
+A six_pattern c10 d1: npat=6 acc(paper)=0.948
+A six_pattern c10 d2: npat=6 acc(paper)=0.983
+A six_pattern c10 d3: npat=6 acc(paper)=0.972
+C1 two_pattern: culture-ID acc=0.9398 (chance 0.10)
+C1 six_pattern: culture-ID acc=0.8993 (chance 0.10)
+C2 day-ID decoding done
+C3 two_pattern c1: d1->d3=0.205 d3->d1=0.298 (chance 0.250)
+C3 two_pattern c2: d1->d3=0.542 d3->d1=0.418 (chance 0.250)
+C3 two_pattern c3: d1->d3=0.341 d3->d1=0.296 (chance 0.250)
+C3 two_pattern c4: d1->d3=0.256 d3->d1=0.251 (chance 0.250)
+C3 two_pattern c5: d1->d3=0.575 d3->d1=0.684 (chance 0.500)
+C3 two_pattern c6: d1->d3=0.423 d3->d1=0.436 (chance 0.250)
+C3 two_pattern c7: d1->d3=0.900 d3->d1=0.912 (chance 0.500)
+C3 two_pattern c8: d1->d3=0.463 d3->d1=0.564 (chance 0.333)
+C3 two_pattern c9: d1->d3=0.528 d3->d1=0.325 (chance 0.333)
+C3 two_pattern c10: d1->d3=0.366 d3->d1=0.499 (chance 0.250)
+C3 six_pattern c1: d1->d3=0.221 d3->d1=0.244 (chance 0.167)
+C3 six_pattern c2: d1->d3=0.374 d3->d1=0.220 (chance 0.167)
+C3 six_pattern c3: d1->d3=0.172 d3->d1=0.283 (chance 0.167)
+C3 six_pattern c4: d1->d3=0.191 d3->d1=0.243 (chance 0.167)
+C3 six_pattern c5: d1->d3=0.366 d3->d1=0.260 (chance 0.167)
+C3 six_pattern c6: d1->d3=0.489 d3->d1=0.436 (chance 0.167)
+C3 six_pattern c9: d1->d3=0.166 d3->d1=0.164 (chance 0.167)
+C3 six_pattern c10: d1->d3=0.307 d3->d1=0.232 (chance 0.167)
+C4 two_pattern c1 d1: null_mean=0.248
+C4 two_pattern c1 d2: null_mean=0.248
+C4 two_pattern c1 d3: null_mean=0.260
+C4 two_pattern c2 d1: null_mean=0.244
+C4 two_pattern c2 d2: null_mean=0.326
+C4 two_pattern c2 d3: null_mean=0.251
+C4 two_pattern c3 d1: null_mean=0.256
+C4 two_pattern c3 d2: null_mean=0.244
+C4 two_pattern c3 d3: null_mean=0.250
+C4 two_pattern c4 d1: null_mean=0.245
+C4 two_pattern c4 d2: null_mean=0.243
+C4 two_pattern c4 d3: null_mean=0.255
+C4 two_pattern c5 d1: null_mean=0.254
+C4 two_pattern c5 d3: null_mean=0.486
+C4 two_pattern c6 d1: null_mean=0.247
+C4 two_pattern c6 d2: null_mean=0.254
+C4 two_pattern c6 d3: null_mean=0.244
+C4 two_pattern c7 d1: null_mean=0.245
+C4 two_pattern c7 d2: null_mean=0.329
+C4 two_pattern c7 d3: null_mean=0.500
+C4 two_pattern c8 d1: null_mean=0.335
+C4 two_pattern c8 d2: null_mean=0.330
+C4 two_pattern c8 d3: null_mean=0.334
+C4 two_pattern c9 d1: null_mean=0.329
+C4 two_pattern c9 d2: null_mean=0.248
+C4 two_pattern c9 d3: null_mean=0.258
+C4 two_pattern c10 d1: null_mean=0.255
+C4 two_pattern c10 d2: null_mean=0.242
+C4 two_pattern c10 d3: null_mean=0.253
+C4 six_pattern c1 d1: null_mean=0.167
+C4 six_pattern c1 d2: null_mean=0.164
+C4 six_pattern c1 d3: null_mean=0.169
+C4 six_pattern c2 d1: null_mean=0.170
+C4 six_pattern c2 d2: null_mean=0.169
+C4 six_pattern c2 d3: null_mean=0.166
+C4 six_pattern c3 d1: null_mean=0.161
+C4 six_pattern c3 d2: null_mean=0.161
+C4 six_pattern c3 d3: null_mean=0.169
+C4 six_pattern c4 d1: null_mean=0.167
+C4 six_pattern c4 d2: null_mean=0.167
+C4 six_pattern c4 d3: null_mean=0.169
+C4 six_pattern c5 d1: null_mean=0.169
+C4 six_pattern c5 d2: null_mean=0.160
+C4 six_pattern c5 d3: null_mean=0.169
+C4 six_pattern c6 d1: null_mean=0.162
+C4 six_pattern c6 d2: null_mean=0.166
+C4 six_pattern c6 d3: null_mean=0.166
+C4 six_pattern c7 d1: null_mean=0.167
+C4 six_pattern c7 d2: null_mean=0.170
+C4 six_pattern c8 d1: null_mean=0.169
+C4 six_pattern c8 d2: null_mean=0.170
+C4 six_pattern c9 d1: null_mean=0.166
+C4 six_pattern c9 d3: null_mean=0.167
+C4 six_pattern c10 d1: null_mean=0.168
+C4 six_pattern c10 d2: null_mean=0.163
+C4 six_pattern c10 d3: null_mean=0.168
+C4 permutation nulls done
+D two_pattern: n=9 day1=0.9744 day3=0.9670 delta=-0.0073 t=-0.389 p=0.7071
+   excitability: rate day1=0.9788 day3=0.8016 corr(delta_rate, delta_acc)=0.199 p=0.6076
+D six_pattern: n=7 day1=0.8955 day3=0.9131 delta=+0.0177 t=0.760 p=0.4761
+   excitability: rate day1=0.6094 day3=0.7353 corr(delta_rate, delta_acc)=0.257 p=0.5775
+ALL DONE
+EXIT:0
