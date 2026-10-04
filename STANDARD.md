@@ -1,4 +1,4 @@
-# Open Evaluation Standard for Organoid-Intelligence Claims — v0.2
+# Open Evaluation Standard for Organoid-Intelligence Claims — v0.3
 
 **Status:** Draft for comment. Not ratified by any body. Intended to live at
 `github.com/ontiverosreve/organoid-evaluation-standards`.
@@ -22,6 +22,16 @@ number seriously — and what to report so others can check your work.
 recordings (MEA, HD-MEA, shank probes) from neural tissue, including dose and
 intervention claims. The controls are pipeline-agnostic: they apply to reservoir
 computers, SVMs, CNNs, or anything else that turns spike data into labels.
+
+**Scope note (v0.3):** repeated-session training claims — "accuracy improved from
+day 1 to day 3", "the network learned the patterns across sessions" — are in
+scope whenever the training is **open-loop** (stimulation delivered on a fixed
+schedule, no behavior-contingent feedback). Audit #4 was exactly this kind of
+claim and motivated §3.7. **Closed-loop learning claims** (behavior-contingent
+feedback, e.g., "the culture learned Pong") remain **out of scope (for now)**:
+the feedback loop introduces its own confound family — reward-correlated drift,
+exploration-exploitation structure, closed-loop artifact coupling — and needs
+its own controls (see §7).
 
 **Out of scope (for now):** closed-loop learning claims (e.g., "the culture
 learned Pong"), calcium-imaging-only claims, and simulated data. These need
@@ -63,11 +73,14 @@ is the rule, not the exception.
 
 ## 3. Required null controls for classifier-based claims
 
-All six controls below are **required** for any published or preprinted claim
+All seven controls below are **required** for any published or preprinted claim
 of the form "classifier X distinguishes conditions A and B in neural recordings."
 Each control gets a verdict: **pass**, **fail**, or **not applicable (with
 written justification)**. A fail on 3.1 or 3.2 withdraws the headline claim. A
-fail on 3.3–3.6 qualifies it (see criteria).
+fail on 3.3–3.6 qualifies it (see criteria). A fail on 3.7 withdraws the
+*training* claim while leaving any within-session decoding claim to be judged
+by 3.1–3.6 — the standard distinguishes a real effect with a wrong story from
+no effect at all.
 
 ### 3.1 Session-identity control (required)
 
@@ -168,6 +181,41 @@ pipeline reads across sessions when the condition is held fixed; 3.6 asks
 what it reads within a run when the neural response is held fixed and only
 the stimulation artifact is removed.
 
+### 3.7 Cross-session transfer (required for repeated-session training/plasticity claims)
+
+Where the claim is that repeated training, stimulation, or exposure *changed*
+the network — accuracy improved across days, representations sharpened,
+responses stabilized — the decoder must be tested **across the session boundary
+the claim says was crossed**. Within-session decoding, however strong, cannot
+establish learning: a classifier can reach 0.96 within a day on session
+fingerprints alone.
+
+Train the identical pipeline on session A and test on session B, then reverse
+(train B, test A). Report both directions. Match units or channels across
+sessions by electrode ID (or the closest available unit-matching rule, stated
+explicitly), and report the fraction of units that matched.
+
+- **Pass:** above-chance transfer in both directions, substantially above the
+  §3.2 shuffle null. The representation the decoder learned in one session
+  exists in the other — the thing that "improved" is a thing, not a
+  fingerprint.
+- **Fail:** transfer at or near chance. Day-to-day accuracy changes are then
+  drift, reconfiguration, or session fingerprints — not learning. Below-chance
+  transfer is stronger evidence still: a session-A decoder actively misled by
+  session B means the sessions' representations point in different directions.
+  Withdraw the training claim.
+
+This control is the sibling of 3.1 and 3.6: 3.1 asks what the pipeline reads
+across sessions when the condition is held fixed; 3.6 asks what it reads within
+a run when the neural response is held fixed and only the artifact is removed;
+3.7 asks whether what the pipeline learned in one session survives contact
+with the next. A learning claim that cannot cross a session boundary is a claim
+about sessions.
+
+Failing 3.7 does not impugn within-session decoding. A decoder can genuinely
+read patterns within a day while the training narrative fails — report both
+results separately.
+
 ---
 
 ## 4. Required controls for dose and intervention claims
@@ -230,7 +278,7 @@ Every claim under this standard ships with:
    "max mean accuracy; ties broken by first").
 5. **Headline numbers with seeds:** accuracy per hyperparameter × seed, for
    every split (interleaved and chronological).
-6. **Null-control numbers:** for 3.1–3.6 and 4.1, the same granularity —
+6. **Null-control numbers:** for 3.1–3.7 and 4.1, the same granularity —
    never a mean without its max and its seed-wise spread.
 7. **Machine-readable release:** configuration file, run tables (one row per
    run), block tables (one row per block: file, index, label, prediction,
@@ -290,6 +338,22 @@ proves it. The standard distinguishes these two outcomes; that is its job.
   family; adds §3.6 stimulation-artifact control; requires trial-respecting
   CV folds in §3.3 for state-carryover decoders; adds culture architecture
   and cell lineage to the §5 provenance checklist.
+- **v0.3** (2026-10-04): adds §3.7 cross-session transfer control (required
+  for repeated-session training/plasticity claims); clarifies in §1 that
+  open-loop repeated-session training claims are in scope while closed-loop
+  learning claims remain out of scope. Motivated by Audit #4 — honest-controls
+  audit of Shao et al. 2025, "Repetitive training enhances the pattern
+  recognition capability of cultured neural networks," *PLOS Computational
+  Biology* 21(4):e1013043 (https://doi.org/10.1371/journal.pcbi.1013043):
+  within-day pattern decoding was real (0.96 two-pattern / 0.90 six-pattern,
+  far above shuffle nulls) but cross-day transfer collapsed (0.47 / 0.29,
+  one culture below chance at 0.205), session identity dominated the features
+  (culture-ID 0.94, day-ID 0.94), and the "repeated training improves
+  recognition" narrative did not survive (paired day-3−day-1 gains n.s. in
+  both experiments). §3.6 was battle-tested in the same audit: the [0,2] ms
+  stimulation artifact alone decoded patterns at 0.985, confirming the blank
+  is load-bearing. Audit:
+  `github.com/ontiverosreve/organoid-evaluation-standards/tree/main/audits/audit-04-shao2025`.
 - Amendments are proposed as issues/pull requests on the public repository,
   with a worked example (pass or fail) attached. A control earns its place by
   killing a real headline, not by sounding prudent.
