@@ -1,13 +1,7 @@
-# Open Evaluation Standard for Organoid-Intelligence Claims — v0.4 (DRAFT)
+# Open Evaluation Standard for Organoid-Intelligence Claims — v0.3
 
 **Status:** Draft for comment. Not ratified by any body. Intended to live at
 `github.com/ontiverosreve/organoid-evaluation-standards`.
-
-**Changes from v0.3:** adds §3.8 (transfer-test validity / zero-state collapse
-diagnostic) and §4.4 (stimulation-parameter-matched control); amends §3 intro
-(seven → eight required controls), §5 item 2 (stimulation-parameter schedule
-in provenance), and §7 (v0.4 entry, corrected evidence-base count). New clauses
-are tagged **[New in v0.4]**.
 
 ---
 
@@ -79,15 +73,14 @@ is the rule, not the exception.
 
 ## 3. Required null controls for classifier-based claims
 
-All eight controls below are **required** for any published or preprinted claim
+All seven controls below are **required** for any published or preprinted claim
 of the form "classifier X distinguishes conditions A and B in neural recordings."
 Each control gets a verdict: **pass**, **fail**, or **not applicable (with
 written justification)**. A fail on 3.1 or 3.2 withdraws the headline claim. A
 fail on 3.3–3.6 qualifies it (see criteria). A fail on 3.7 withdraws the
 *training* claim while leaving any within-session decoding claim to be judged
 by 3.1–3.6 — the standard distinguishes a real effect with a wrong story from
-no effect at all. A high collapse fraction on 3.8 invalidates the transfer test
-itself: fix the readout and re-run before any verdict on 3.7 is drawn.
+no effect at all.
 
 ### 3.1 Session-identity control (required)
 
@@ -223,37 +216,6 @@ Failing 3.7 does not impugn within-session decoding. A decoder can genuinely
 read patterns within a day while the training narrative fails — report both
 results separately.
 
-### 3.8 Transfer-test validity: the zero-state check **[New in v0.4]**
-(required where the decoder carries internal state)
-
-A §3.7 transfer test can fail for a methodological reason that has nothing to
-do with the tissue: the decoder's internal state can collapse on out-of-session
-data. A reservoir whose test-trial states sit near zero is not decoding badly —
-it is not decoding at all, and its argmax is degenerate. Reporting that
-accuracy as "no transfer" confuses a broken instrument with a negative result.
-
-Before interpreting any §3.7 result from a state-carrying decoder (reservoir,
-RNN, LSTM, or any readout over evolving hidden states):
-
-1. Declare, **before** running the transfer, a state-norm threshold (e.g., a
-   low quantile of the training-state norm distribution).
-2. Report the **collapse fraction**: the fraction of test trials whose
-   readout-state norm falls below that threshold, for each transfer direction.
-
-- **Valid test:** collapse fraction near zero and transfer at chance — the
-  honest fail. The representation genuinely does not cross the session
-  boundary.
-- **Invalid test:** a large collapse fraction. Audit #3: on cross-day transfer,
-  77–78% of sparse test trials collapsed to near-zero reservoir states and the
-  argmax degenerated, while the same pipeline decoded within-day at up to
-  0.967. The transfer number measured the decoder's silence, not the tissue's
-  change. Do not report the accuracy as evidence of no transfer; fix the
-  readout (longer state integration, state-norm regularization, or a stateless
-  decoder) and re-run §3.7.
-
-The standard's adversarial rule applies to the test itself: a control that
-cannot distinguish "no effect" from "broken instrument" is not a control.
-
 ---
 
 ## 4. Required controls for dose and intervention claims
@@ -295,35 +257,6 @@ standard endorses. Retrospective file-per-condition data can never reach this
 bar; that is a limitation of the data, not of the claim — but it must be
 stated.
 
-### 4.4 Stimulation-parameter-matched control **[New in v0.4]**
-(required where an intervention coincides with a stimulation-parameter change)
-
-When a protocol change — medium swap, compound application, day boundary,
-culture transfer — coincides with a change in stimulation parameters (rate,
-amplitude, inter-stimulus interval, or electrode selection), no effect may be
-attributed to the protocol change until a **within-day, parameter-matched
-control** rules out the stimulation parameters as the cause. Stimulation rate
-alone can move evoked responses by two orders of magnitude; a "protocol
-effect" riding on a rate change is a rate effect until proven otherwise.
-
-- **Pass:** the effect persists when stimulation parameters are held fixed
-  across the protocol change (same-day blocks at matched rate/amplitude/ISI),
-  or a within-day parameter sweep reproduces the attribution (varying only the
-  rate reproduces the change).
-- **Fail:** the effect tracks the stimulation parameter, not the protocol.
-  Audit #3: an apparent medium-change effect — evoked-response ratios
-  collapsing from a median 125.2× to 0.94× (p=1.3e-14) — was refuted by a
-  within-day control: blocks recorded 2.4 h *after* the medium change at 10 s
-  volley spacing showed the same ~100× responses as pre-change days, while
-  1 Hz blocks showed 0.94× (U=18060, p=3.9e-08). The collapse was
-  stimulation-rate saturation, not the medium.
-
-Report the full stimulation-parameter schedule (rate, amplitude, ISI,
-electrode map) alongside the protocol timeline in §5. A retrospective dataset
-whose protocol changes are perfectly confounded with stimulation-parameter
-changes, with no within-day matched blocks, cannot support the attribution —
-say so.
-
 ---
 
 ## 5. Reporting checklist
@@ -337,9 +270,7 @@ Every claim under this standard ships with:
    architecture shapes decoding performance and must be part of the record.
 2. **N blocks and files:** number of blocks per condition, block length,
    number of recording sessions per condition, and the **recording order**
-   (which session was recorded when, at what dose). **[New in v0.4:]** the
-   **stimulation-parameter schedule** per block/session (rate, amplitude, ISI,
-   electrode map) wherever stimulation was delivered — see §4.4.
+   (which session was recorded when, at what dose).
 3. **Preprocessing:** bin width, standardization scope (per-file? global?),
    channel exclusion criteria, and what the preprocessing removes (cf. 3.5).
 4. **Model and sweep:** architecture, all hyperparameters swept, all random
@@ -347,9 +278,8 @@ Every claim under this standard ships with:
    "max mean accuracy; ties broken by first").
 5. **Headline numbers with seeds:** accuracy per hyperparameter × seed, for
    every split (interleaved and chronological).
-6. **Null-control numbers:** for 3.1–3.8 and 4.1–4.4, the same granularity —
-   never a mean without its max and its seed-wise spread. **[New in v0.4:]**
-   include the §3.8 collapse fraction per transfer direction.
+6. **Null-control numbers:** for 3.1–3.7 and 4.1, the same granularity —
+   never a mean without its max and its seed-wise spread.
 7. **Machine-readable release:** configuration file, run tables (one row per
    run), block tables (one row per block: file, index, label, prediction,
    quality weight), and a **verification script** that independently re-checks
@@ -424,21 +354,6 @@ proves it. The standard distinguishes these two outcomes; that is its job.
   stimulation artifact alone decoded patterns at 0.985, confirming the blank
   is load-bearing. Audit:
   `github.com/ontiverosreve/organoid-evaluation-standards/tree/main/audits/audit-04-shao2025`.
-- **v0.4** (2026-10-08): adds §3.8 transfer-test validity (zero-state collapse
-  diagnostic for state-carrying decoders) and §4.4 stimulation-parameter-matched
-  control; extends §5 provenance to the stimulation-parameter schedule.
-  Motivated by Audit #3 — honest-controls audit of two FinalSpark whole-life
-  MEA datasets (FS369, 21.2-day continuous; FS437, 5.7-day), the first audit
-  of data with no published claim attached: stimulation-evoked responses
-  survived every null (FS437 post-stim elevations 4.17× / 2.73× / 4.56× vs
-  stim-shuffled null ≈ 1.0; FS369 within-day amplitude decoding 0.725 ± 0.101,
-  artifact-blanked 0.700; dead-culture negative control clean), but
-  cross-session transfer failed on both datasets (canonical reservoir
-  0.322 / 0.330 vs 1/3 chance; FS437 forward P2 recall 0.16 vs 0.42 shuffled
-  null), session identity decoded from background activity alone (day-ID
-  0.9215 vs 1/22 chance; epoch 0.9867), and the apparent medium-change effect
-  was refuted as stimulation-rate saturation (U=18060, p=3.9e-08). Audit:
-  `github.com/ontiverosreve/organoid-evaluation-standards/tree/main/audits/audit-03-finalspark`.
 - Amendments are proposed as issues/pull requests on the public repository,
   with a worked example (pass or fail) attached. A control earns its place by
   killing a real headline, not by sounding prudent.
@@ -448,23 +363,6 @@ proves it. The standard distinguishes these two outcomes; that is its job.
   guidance (e.g., frequency-domain vs. time-bin decoding) and decoder-bias
   controls alongside the artifact and trial-respecting controls already
   established by Loeffler et al. 2026.
-
-### Evidence base (v0.4) — corrected count
-
-The Audit #3 report's "five datasets, four labs" line undercounts: FS369 and
-FS437 are two independent experiments. The corrected evidence base:
-
-| # | Dataset | Lab | Within-session effect | Cross-session transfer |
-|---|---|---|---|---|
-| 1 | Stage C (Trujillo et al., Zenodo 4751759) | Muotri, UCSD | drug classifier 1.000 | fails session nulls |
-| 2 | Audit #1 (Sharf et al. 2022) | Sharf, UCSC | dose signature 1.000 | fails session nulls; dose ordering survives |
-| 3 | Audit #2 (DishBrain, Kagan et al. 2022) | Cortical Labs | HCC learning +0.150, p=6.3e-13 | feedback-dependence survives with caveats |
-| 4 | Audit #4 (Shao et al. 2025) | Shao, Tianjin Univ. | pattern decoding 0.96 / 0.90 | training claim fails; transfer collapses |
-| 5 | Audit #3 (FinalSpark FS369) | FinalSpark | amplitude decoding 0.725 ± 0.101/day | transfer 0.322 / 0.330 = chance |
-| 6 | Audit #3 (FinalSpark FS437) | FinalSpark | evoked 2.73–4.56× vs null ≈ 1.0 | forward P2 recall 0.16 vs 0.42 null |
-
-**Six datasets, five labs, one confound: session identity.** Within-session
-effects hold; cross-session generalization does not.
 
 *The future is grown, not built. But it has to be grown honestly — and honesty
 needs a checklist.*
