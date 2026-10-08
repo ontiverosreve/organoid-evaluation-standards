@@ -1,0 +1,32 @@
+storer type: AppendableFrameTable nrows: 94154693
+P1_1.5uA_pos n stims: 63264
+P2_2.5uA_neg n stims: 2040
+P3_0.8uA_100us_neg n stims: 1312
+chunk 6/24 done, 32s
+chunk 12/24 done, 57s
+chunk 18/24 done, 82s
+chunk 24/24 done, 104s
+saved /home/hatch/workspace/reservoir-eeg/work/audit_finalspark/results/fs369_explore_s3.json
+total events: 94154693
+span: 2025-02-19 10:29:17.411332+00:00 -> 2025-03-12 15:35:38.992411+00:00
+mono violations: 0 adjacent dups: 0
+artifact 2ms: 3853 (0.004%) 10ms: 17718 (0.019%)
+stim response: {
+ "P1_1.5uA_pos": {
+  "pre": 78826,
+  "post": 12717,
+  "n": 48001
+ },
+ "P2_2.5uA_neg": {
+  "pre": 37095,
+  "post": 4517,
+  "n": 2040
+ },
+ "P3_0.8uA_100us_neg": {
+  "pre": 640,
+  "post": 2228,
+  "n": 1312
+ }
+}
+top intervals (ns): [(100000, 3117), (300000, 2962), (200000, 2852), (400000, 2819), (500000, 2813), (700000, 2673), (600000, 2666), (0, 2491), (800000, 2489), (900000, 2364), (33000, 2333), (1000000, 2309), (1100000, 2206), (1300000, 2205), (1200000, 2194)]
+electrodes: 32

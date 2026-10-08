@@ -1,0 +1,120 @@
+
+[lifespan_fs369.py run 2026-10-07 20:20:50 GMT]
+Proto A (a1=a2=1.5,d1=d2=300,2 pulses,period=10000,pol=1,shape=0): 63264 stims total.
+  groups: pre20(02-20)=320, pre21(02-21)=320, post(02-28)=58144
+Task A: 6092 blocks, epoch counts early/mid/late=[1891, 2016, 2185], days=22
+  persistent-8 (late/early top-8 of 72-87): [73, 75, 76, 80, 83, 85, 86, 87]
+  ratios: {72: 0.113, 73: 25.304, 74: 0.121, 75: 0.499, 76: 0.407, 77: 0.081, 78: 0.034, 79: 0.187, 80: 0.48, 81: 0.196, 82: 0.067, 83: 0.471, 84: 0.211, 85: 0.348, 86: 0.297, 87: 0.353}
+Task A decoding (mean+/-sd, 5-fold strat CV; nulls = 20 label shuffles):
+  epoch_all32: acc=0.9867 +/- 0.0035 (chance 1/3) null=0.3494 +/- 0.0062 [0.3395,0.3606] p_emp=0.0476
+  dayid_all32: acc=0.9215 +/- 0.0083 (chance 1/22) null=0.0455 +/- 0.0025 [0.0405,0.0499] p_emp=0.0476
+  epoch_persistent8: acc=0.8012 +/- 0.014 (chance 1/3) null=0.3548 +/- 0.0025 [0.348,0.3585] p_emp=0.0476
+  epoch_collapsing8: acc=0.8981 +/- 0.0086 (chance 1/3) null=0.356 +/- 0.004 [0.3493,0.3644] p_emp=0.0476
+Task B (Proto A only; MWU two-sided asymptotic):
+  post_vs_pre_change | evoked_ratio: n1=58112 n2=640 med1=0.9389 med2=125.1875 diff=-124.248600 U=103424.0 p=0 zero-pre excluded: post 32, pre 0
+  control_20_vs_21 | evoked_ratio: n1=320 n2=320 med1=158.625 med2=81.72727 diff=+76.897730 U=71680.0 p=1.83e-18 zero-pre excluded: 02-20 0, 02-21 0
+  post_vs_pre_change | baseline_rate_hz: n1=58144 n2=640 med1=31.11111 med2=18.88889 diff=+12.222220 U=24775680.0 p=2.19e-47 
+  control_20_vs_21 | baseline_rate_hz: n1=320 n2=320 med1=15.55556 med2=32.22222 diff=-16.666670 U=31232.0 p=1.12e-17 
+elapsed 399s
+
+================================================================================
+[2026-10-07] Workstream 1 — stimulation-amplitude decoding with honest controls (FS369)
+Scripts: code/cohort_select_fs369.py, code/extract_features_fs369.py, code/stim_decode_fs369.py
+Data: data/fs369/fs369_package.hdf5 (CONFIDENTIAL — aggregates only)
+
+COHORT CORRECTION (vs task spec): the requested 5-way cohort (0.8/1.0/1.5/2.0/4.0 uA)
+does NOT exist. Verified by groupby: 2.0/4.0 uA 2-pulse protocols occur ONLY on
+2025-03-04 at d=100/200 us (rotating 4-electrode subsets, 5 Hz), never on the sweep
+days. The clean balanced cohort is 3-WAY: d1=d2=300, polarity=0, shape=0,
+nb_stim_pulse=2, period=10000, a1=a2 in {0.8, 1.0, 1.5} uA, days 2025-02-20/21/28
+and 2025-03-06. CHANCE = 1/3.
+
+TRIAL UNIT CORRECTION: each timestamp stimulates ALL 32 electrodes simultaneously
+(120 timestamps x 32 rows = 3840 stim rows; exactly 32 rows/timestamp, single
+amplitude each). Per-stim-row trials would be exact feature duplicates, so trials
+are timestamps: n=120 (40/amplitude; 30/day; 10 timestamps per amplitude per day).
+Within each day amplitudes are strictly BLOCKED (10x 0.8, then 10x 1.0, then
+10x 1.5, ~10 s apart). Baseline [-550,-500] ms window is clean (prior stim 10 s back).
+Exact n per amplitude per day: 320 stim rows = 10 timestamps (120/trial-unit rows
+per electrode: 120 per electrode, 32 electrodes).
+
+n per amplitude per day (stim rows / timestamps): every cell = 320 rows / 10 timestamps.
+  amp\day   02-20  02-21  02-28  03-06
+  0.8         320    320    320    320
+  1.0         320    320    320    320
+  1.5         320    320    320    320
+
+Features: 50x32 spike-count matrix, 1 ms bins, [0,50) ms post-stim (chunked
+events scan, 15 s); baseline X_base 50x32 from [-550,-500) ms. Evoked response
+per trial (mean events in [0,50) ms): 0.8 uA = 87.9, 1.0 uA = 79.7, 1.5 uA = 66.0
+vs baseline 3.5-4.4 (ratios ~19-25x). Note: evoked burst magnitude DECREASES with
+amplitude — a day-drifting quantity, relevant to the transfer result below.
+
+Canonical adaptations (documented): (1) trials replace 10 s blocks: 50 one-ms
+bins x 32 channels; reservoir (150 nodes, rho 0.9, sparsity 0.1) and
+run_leaky_reservoir used UNCHANGED, mean state over 50 bins is the trial feature;
+(2) ridge_fit generalized binary->K-class one-hot (np.eye(K), K=3), lam 1e-3,
+quality weighting unchanged; (3) label-shuffle null adapted to stratified 5-fold
+trial CV, 20 reps, fixed (alpha=0.01, seed=7).
+
+RESULTS (5-fold stratified CV; chance=0.3333):
+- Pooled (n=120): reservoir 0.536 +/- 0.059 across alpha x seed (range 0.433-0.617);
+  logreg (secondary) 0.725 +/- 0.101.
+- Per-day reservoir: 02-20: 0.722 +/- 0.070 | 02-21: 0.856 +/- 0.044 |
+  02-28: 0.563 +/- 0.069 | 03-06: 0.626 +/- 0.038.
+- Per-day logreg: 02-20: 0.900 | 02-21: 0.867 | 02-28: 0.900 | 03-06: 0.967.
+- Artifact control [10,50] ms (0-10 ms blanked): reservoir 0.509 +/- 0.057;
+  logreg 0.700 +/- 0.110. -> information is NOT in the first 10 ms; survives blanking.
+- Baseline null [-550,-500] ms: reservoir 0.367 +/- 0.014; logreg 0.325 +/- 0.061.
+  -> at chance, as required.
+- Label-shuffle null (20 reps, pooled CV): true 0.558 vs null 0.337 +/- 0.065,
+  max 0.450. -> real signal, not a CV artifact.
+- Cross-day transfer (§3.7): 02-20 -> 02-28: reservoir 0.322 +/- 0.027, logreg 0.533;
+  02-28 -> 02-20: reservoir 0.330 +/- 0.010, logreg 0.367. -> canonical reservoir
+  transfer FAILS both directions (at chance); logreg partially transfers one
+  direction only.
+- Locality (per-electrode 50x1 pooled CV, reservoir): mean 0.339 +/- 0.017 over 32
+  electrodes; max 0.387 (elec 81/82) vs all-32 0.536 / logreg 0.725.
+  -> information is DISTRIBUTED across the array, not local to any electrode
+  (every electrode was stimulated simultaneously, so this tests which electrodes'
+  responses carry amplitude information).
+
+VERDICT:
+1. Amplitude IS decodable within a day (real evoked signature: survives 0-10 ms
+   blanking, baseline null at chance, beats label-shuffle null).
+2. Cross-day transfer FAILS for the canonical reservoir pipeline both directions
+   (0.322 / 0.330 = chance); logreg manages 0.533 one way, chance the other.
+   The amplitude signature is day-specific — the Stage C mirror: it does not
+   generalize across recording sessions.
+3. Information is distributed, not local: no single electrode decodes above chance.
+4. Likely mechanism: the decoder leans on evoked burst magnitude, which decreases
+   with amplitude (87.9 -> 79.7 -> 66.0 events/trial) AND drifts across days
+   (die-off curve; 02-28 sits post-medium-change). A day-drifting scalar cannot
+   transfer.
+Outputs: results/decoding_amplitude_fs369.csv, results/cross_day_transfer_fs369.csv,
+results/fs369_trial_features.npz, results/fs369_stim_cohort.csv,
+results/fs369_cohort_counts.json.
+================================================================================
+
+[lifespan_fs369_volley.py run 2026-10-07 20:24:54 GMT]
+VOLLEY-LEVEL correction: Proto A stims are simultaneous whole-array volleys
+(32 electrodes, identical timestamps). Pre-change "n=640 stims" = 20 volleys
+(10 on 02-20, 10 on 02-21); post-change = 1,817 volleys. Per-stim array-wide
+windows are identical within a volley -> per-stim MWU had 32x pseudoreplication.
+Honest unit = volley. No window contamination: Proto A volleys are >=1s from any
+other volley (02-20/02-21: ~10s apart; 02-28: ~1.01s apart).
+Volley-level contrasts (MWU two-sided asymptotic):
+  post_vs_pre_change | evoked_ratio: n1=1816 n2=20 med1=0.9389 med2=125.1875 diff=-124.248600 U=101.0 p=1.33e-14 honest n: 1817 vs 20 volleys; zero-pre excluded: 1
+  control_20_vs_21 | evoked_ratio: n1=10 n2=10 med1=158.625 med2=81.7273 diff=+76.897700 U=70.0 p=0.14 
+  post_vs_pre_change | baseline_rate_hz: n1=1817 n2=20 med1=31.1111 med2=18.8889 diff=+12.222200 U=24195.0 p=0.0106 
+  control_20_vs_21 | baseline_rate_hz: n1=10 n2=10 med1=15.5556 med2=32.2222 diff=-16.666700 U=30.5 p=0.15 
+  habituation_0228_first100_vs_last100 | evoked_ratio: n1=100 n2=100 med1=1.125 med2=0.9743 diff=+0.150700 U=5290.0 p=0.474 
+
+[block1-vs-block2 within-day control]
+02-28 block1 (16:25:30-16:27:00 UTC, 10 volleys, 10s ISI, 2.4h AFTER medium change): median evoked ratio 100.55, median baseline 21.1 Hz
+02-28 block2 (from 21:05:57 UTC, 1806 volleys, 1.01s ISI): median evoked ratio 0.9375, median baseline 31.1 Hz
+block1 vs block2 evoked_ratio MWU: U=18060.0 p=3.94e-08
+Interpretation: block1 is POST-medium-change and shows the same massive evoked responses (~100x) as pre-change days. The collapse in block2 is tied to the 1Hz continuous drive (saturation), not the medium change. Within-day, post-change control kills the medium-change attribution.
+
+[2026-10-07 14:35:00 UTC] Workstream 3 (evoked_fs437.py): A1 evoked ratios P1/P2/P3 + 20-rep stim-shuffled nulls (ISIs permuted within (day,electrode), protocol labels kept); A2 P1/P2/P3 decoding from [0,50]ms 32-count features (LR + canonical reservoir alphas [0.005,0.01,0.02] x seeds [7,11,22], 5-fold CV, [0,50]ms and [10,50]ms-blanked variants, 20-rep label-shuffle nulls, 18k-trial stratified subsample); B cross-day transfer: P2/P3 June7-8->June9 (P2 anchor), P1/P2 June9->June7-8 (P2 anchor), in-distribution held-out references, train-set CV + per-class-recall degeneracy diagnostics, day-ID decoder on baseline [-500,-50]ms vectors (LR + reservoir); C dead-culture (June 11, 1,050 stims) negative control: evoked counts + live-trained P1/P2/P3 LR applied to dead stims. Outputs: evoked_fs437.csv (12 rows), transfer_fs437.csv (23 rows), dead_culture_fs437.csv (14 rows).
+Key: A1 ratios P1=4.167/P2=2.732/P3=4.559 all >> shuffled nulls (~1.00, p=0.0476 min) -> evoked responses REAL. A2 decoding weak but significant (LR 0.435, reservoir ~0.405 vs 0.333; blanked 0.402/0.377). B transfer FAILS: forward P2 recall 0.162 vs null 0.421; reverse P2 recall 1.000 is a P2-biased-classifier artifact (P1 recall 0.277 in-dist, train CV 0.639); reservoir transfer degenerate (78% near-zero test states -> argmax collapse to class 0, observed ~= null). Day-ID from baseline: LR 0.511, reservoir ~0.44 vs 0.333 -> session/day confound confirmed. C: 0 events in 1,050 post windows and 1,050 baseline windows (ratio NaN=0/0); decoder confidence collapses to chance (0.347 vs 0.333; 100% zero features) -> negative control passes, pipeline does not hallucinate responses.

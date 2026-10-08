@@ -1,0 +1,14 @@
+measurement,value,notes
+n_stims_june11,1050,"stims delivered 2025-06-11 07:00-08:00, after last event 06:38:02"
+n_events_during_june11_stim_span,0,events overlapping the 07:00-08:00 stim window
+dead_evoked_post_events_total,0,"total events in [0,50]ms post-stim, same electrode, over 1,050 stims"
+dead_evoked_baseline_events_total,0,"total events in [-500,-50]ms pre-stim, same electrode"
+dead_evoked_ratio,nan,"mean post rate / mean baseline rate; NaN = 0/0, no detectable response"
+dead_stims_with_ge1_post_event,0,expect 0
+dead_zero_feature_fraction,1.0,"fraction of June-11 stims with all-zero 32-count [0,50]ms features"
+dead_predicted_class_fraction_P1,0.0,live-trained P1/P2/P3 LR applied to dead-culture stims
+dead_predicted_class_fraction_P2,0.0,live-trained P1/P2/P3 LR applied to dead-culture stims
+dead_predicted_class_fraction_P3,1.0,live-trained P1/P2/P3 LR applied to dead-culture stims
+dead_mean_top_class_probability,0.3473,chance-level confidence = 0.333
+live_mean_top_class_probability,0.4331,"same model, live held-out stims (5-fold CV)"
+dead_P2protocol_stim_P2_recall,0.0,492 June-11 stims use exactly P2 parameters; fraction classified P2 by live-trained decoder (chance=0.333)

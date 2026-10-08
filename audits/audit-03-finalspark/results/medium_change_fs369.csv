@@ -1,0 +1,12 @@
+unit,contrast,metric,n_g1,n_g2,median_g1,median_g2,median_diff_g1_minus_g2,U_statistic,p_value,notes
+per_stim,post_vs_pre_change,evoked_ratio,58112,640,0.9389,125.1875,-124.2486,103424.0,0.0,"zero-pre excluded: post 32, pre 0"
+per_stim,control_20_vs_21,evoked_ratio,320,320,158.625,81.72727,76.89773,71680.0,1.8273524876323898e-18,"zero-pre excluded: 02-20 0, 02-21 0"
+per_stim,post_vs_pre_change,baseline_rate_hz,58144,640,31.11111,18.88889,12.22222,24775680.0,2.1928708303721404e-47,
+per_stim,control_20_vs_21,baseline_rate_hz,320,320,15.55556,32.22222,-16.66667,31232.0,1.1174160715085565e-17,
+volley,post_vs_pre_change,evoked_ratio,1816,20,0.9389,125.1875,-124.2486,101.0,1.3261882773897846e-14,honest n: 1817 vs 20 volleys; zero-pre excluded: 1
+volley,control_20_vs_21,evoked_ratio,10,10,158.625,81.7273,76.8977,70.0,0.1404650481583549,
+volley,post_vs_pre_change,baseline_rate_hz,1817,20,31.1111,18.8889,12.2222,24195.0,0.0106137115823276,
+volley,control_20_vs_21,baseline_rate_hz,10,10,15.5556,32.2222,-16.6667,30.5,0.1503121768574169,
+volley,habituation_0228_first100_vs_last100,evoked_ratio,100,100,1.125,0.9743,0.1507,5290.0,0.4737791965535967,
+volley,within_0228_block1_10sISI_vs_block2_1sISI,evoked_ratio,10,1806,100.55,0.9375,99.6125,18060.0,3.944768878503641e-08,"BOTH blocks post-medium-change (14:01:34); block1 16:25-16:27, block2 from 21:06. Same day, same protocol, only volley rate differs."
+volley,within_0228_block1_10sISI_vs_block2_1sISI,baseline_rate_hz,10,1807,21.1111,31.1111,-10.0,,,descriptive only

@@ -1,0 +1,7 @@
+chunk 8/24
+chunk 16/24
+chunk 24/24
+P1_1.5uA_pos {'n_stims': 63264, 'pre_events': 78826, 'post_events': 12717, 'baseline_Hz': 2.769, 'evoked_Hz': 4.02, 'ratio': 1.452, 'frac_stims_post_gt_baselinex': 0.0607}
+P2_2.5uA_neg {'n_stims': 2040, 'pre_events': 37095, 'post_events': 4517, 'baseline_Hz': 40.408, 'evoked_Hz': 44.284, 'ratio': 1.096, 'frac_stims_post_gt_baselinex': 0.4132}
+P3_0.8uA_100us_neg {'n_stims': 1312, 'pre_events': 640, 'post_events': 2228, 'baseline_Hz': 1.084, 'evoked_Hz': 33.963, 'ratio': 31.331, 'frac_stims_post_gt_baselinex': 0.4543}
+saved /home/hatch/workspace/reservoir-eeg/work/audit_finalspark/results/fs369_stim_response.json (69s)
