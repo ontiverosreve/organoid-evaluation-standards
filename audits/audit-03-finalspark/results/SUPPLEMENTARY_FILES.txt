@@ -1,0 +1,9 @@
+Two supplementary derived files are stored base64-encoded because the push
+tool cannot carry large/binary arguments:
+
+- fs369_stim_cohort.csv.gz.b64  ->  base64 -d ... | gunzip  ->  fs369_stim_cohort.csv
+  (464 KB derived stim-cohort table; gzip'd to ~13 KB)
+- fs369_trial_features.npz.b64  ->  base64 -d ... > fs369_trial_features.npz
+  (120-trial feature arrays: X_full, X_base, y, day, amp)
+
+Both decode losslessly; checksums verified at push time.
