@@ -1,0 +1,4 @@
+feature_set,mean_acc,sd_acc
+amplitude-only,0.7038,0.1040
+timing-only,0.9231,0.0730
+all-features,0.9077,0.0713

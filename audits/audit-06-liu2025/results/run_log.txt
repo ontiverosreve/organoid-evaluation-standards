@@ -1,0 +1,55 @@
+audit06 run 2026-10-08 23:25 UTC
+loaded 65 recordings in 14.7s
+pipeline check: event_time max|diff|=0.20ms corr=1.000000
+pipeline check: cog max|diff|=0.21ms corr=1.000000 (600ms window)
+
+[1] HEADLINE: Early n=30 median=78.7 mean=149.8 sd=142.8
+    Late  n=35 median=486.7 mean=478.5 sd=190.7
+    Mann-Whitney p=1.850e-08  (paper: 150±26 vs 479±32 ms, p<1e-9)
+
+[2] WITHIN-BATCH stratification (§3.1):
+    230328: single-protocol batch (n=L=3) — no within-batch contrast possible
+    230329: single-protocol batch (n=L=5) — no within-batch contrast possible
+    230401: nE=7 nL=6 medE=116 medL=463 diff=-347 p=0.0140
+    230429: nE=4 nL=4 medE=77 medL=547 diff=-471 p=0.0286
+    230501: nE=8 nL=3 medE=221 medL=482 diff=-261 p=0.1333
+    230502: nE=3 nL=11 medE=46 medL=504 diff=-458 p=0.0055
+    230504: nE=8 nL=3 medE=50 medL=332 diff=-282 p=0.0242
+    stratified within-batch permutation test (2000 reps):
+      observed diff=-407.9ms; 0/2000 within-batch shuffles as-or-more extreme
+      (batch-magnitude note: within-batch diffs range -261..-471ms — direction
+       consistent across all 5 mixed batches, magnitude varies)
+
+[3] BATCH-IDENTITY null (§3.1): can batch be decoded from traces within one protocol?
+    Early: batch decode acc=0.433 (chance 1/5=0.200, n=30)
+    Late: batch decode acc=0.171 (chance 1/7=0.143, n=35)
+
+[4] SHUFFLE null (§3.2): shuffle protocol labels, recompute median(E)-median(L)
+    observed diff=-407.9ms; 0/200 shuffles as-or-more extreme; max shuffle diff=174.4
+
+[5] RATE/AMPLITUDE-only baseline (§3.5):
+    amplitude-only: 5-fold-ish CV acc=0.704±0.104 (n=65, chance=0.50)
+    timing-only: 5-fold-ish CV acc=0.923±0.073 (n=65, chance=0.50)
+    all-features: 5-fold-ish CV acc=0.908±0.071 (n=65, chance=0.50)
+
+[6] CROSS-BATCH transfer (§3.7): leave-one-batch-out protocol decoding
+    held-out 230328: acc=0.667 (n_test=3)
+    held-out 230329: acc=0.800 (n_test=5)
+    held-out 230401: acc=0.769 (n_test=13)
+    held-out 230429: acc=1.000 (n_test=8)
+    held-out 230501: acc=0.909 (n_test=11)
+    held-out 230502: acc=1.000 (n_test=14)
+    held-out 230504: acc=0.909 (n_test=11)
+    mean LOBO acc=0.865 (chance=0.50)
+
+[7] Quality-confound checks:
+    ntraces vs event_ms: r=-0.026 p=0.8368
+    ntraces Early-vs-Late: medE=8.00 medL=7.00 p=0.4315
+    base_sd vs event_ms: r=0.171 p=0.1725
+    base_sd Early-vs-Late: medE=0.78 medL=1.18 p=0.1070
+
+[8] SCOPE: dataset covers Fig-2 evoked timing only (65 cells). Spontaneous-replay and
+    prediction-error (omission) claims are not testable from this release — out of scope.
+
+[9] CAVEAT: keepTrace = investigator-selected traces (non-blinded collection per the
+    paper); TraceAll not in the .mat — selection bias cannot be tested. Carried as limitation.
