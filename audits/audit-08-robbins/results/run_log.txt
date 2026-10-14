@@ -1,0 +1,50 @@
+runs total=426  with stats (n>=8 episodes)=424
+[counts] total_runs=426 | runs_with_stats=424 | rl_runs=229 | organoids=16 | chips=15
+[A1_reconstruction] runs_checked=426 | max_abs_diff_p90_linear=0.0 | max_abs_diff_top_decile_mean=531.9000000000001 | mean_abs_diff_top_decile_mean=22.346253275000596 | frac_runs_top_decile_mean_diff_gt_0p05=1.0
+[A2_sensitivity] all:p90~n=-0.692 | all:p90~sd=0.957 | all:p90~iqr=0.954 | all:tdmean~n=-0.685 | all:tdmean~sd=0.994 | all:tdmean~iqr=0.922 | all:median~n=-0.556 | all:median~sd=0.731 | all:median~iqr=0.85 | rl:p90~n=-0.767 | rl:p90~sd=0.959 | rl:p90~iqr=0.936 | rl:tdmean~n=-0.754 | rl:tdmean~sd=0.995 | rl:tdmean~iqr=0.901 | rl:median~n=-0.567 | rl:median~sd=0.602 | rl:median~iqr=0.785
+[A3_trend_p90] median_rho=-0.127 | p=0.9102
+[A3_trend_tdmean] median_rho=-0.191 | p=0.9733
+[A3_trend_median] median_rho=-0.116 | p=0.8825
+[A3_trend_mean] median_rho=-0.111 | p=0.8818
+[A3_trend_sd] median_rho=-0.164 | p=0.9526
+[A3_trend_iqr] median_rho=-0.152 | p=0.9373
+[A4_half_rl] runs=225 | med_rho_odd=0.092 | med_rho_even=0.076 | frac_both_pos=0.53 | corr_halves=0.747
+[A4_half_random] runs=67 | med_rho_odd=0.008 | med_rho_even=-0.004 | frac_both_pos=0.33 | corr_halves=0.58
+[A4_half_none] runs=130 | med_rho_odd=0.034 | med_rho_even=0.051 | frac_both_pos=0.43 | corr_halves=0.578
+[A4_null_RL] obs_mean_of_half_median_rhos=0.084 | perm_p=0.001
+[A5_chronology_metrics] p90_median_rho=-0.127 | p90_p=0.9102 | tdmean_median_rho=-0.191 | tdmean_p=0.9733 | median_median_rho=-0.116 | median_p=0.8825 | mean_median_rho=-0.111 | mean_p=0.8818
+[B1_stratified_RL_trend] strata=40 | rl_runs_covered=221 | median_stratum_median_late_early=1.54 | perm_p_le=0.002 | median_stratum_median_rho=0.0964 | perm_p_rho=0.001
+[B2_contrast_all_rho] strata=31 | median_diff=0.019 | label_perm_p=0.2249 | frac_strata_RL_gt_control=0.55
+[B2_contrast_all_late_early] strata=31 | median_diff=1.1334 | label_perm_p=0.0464 | frac_strata_RL_gt_control=0.61
+[B2_contrast_cycled_rho] strata=31 | median_diff=0.019 | label_perm_p=0.2125 | frac_strata_RL_gt_control=0.55
+[B2_contrast_cycled_late_early] strata=31 | median_diff=1.1334 | label_perm_p=0.0425 | frac_strata_RL_gt_control=0.61
+[B2_contrast_vs_random_rho] strata=21 | median_diff=0.0234 | label_perm_p=0.2647 | frac_strata_RL_gt_control=0.62
+[B2_contrast_vs_none_rho] strata=31 | median_diff=0.0047 | label_perm_p=0.4636 | frac_strata_RL_gt_control=0.55
+[C1_splithalf_p90] organoids=11 | median_diff=-1.163 | frac_pos=0.45 | wilcoxon_p=0.7646
+[C1_splithalf_median] organoids=11 | median_diff=0.0 | frac_pos=0.45 | wilcoxon_p=0.7695
+[C1_splithalf_mean] organoids=11 | median_diff=-0.344 | frac_pos=0.45 | wilcoxon_p=0.5195
+[C2_entry_trend] median_rho=0.17 | shuffle_p=0.0407 | per_org={'20217': 0.26, '21965': 0.31, '22064': -0.1, '22097': 0.37, '22194': 0.3, '23133': -0.17, '23138': 0.34, '23138b': -0.18, '23186': -0.3, 'c20215': -0.32, 'p001068': -0.14, 'p001237b': 0.17, 'p001346': 0.6}
+[C2_exit_trend] median_rho=-0.172 | shuffle_p=0.9578
+[C2_carryover_gap] consecutive_pairs=211 | median_gap=-2.681 | median_within_run_gain=1.857 | retention_ratio_median_gap_over_gain=-1.444 | wilcoxon_gap_vs_0_p=0.00088002622434981
+[C2_gap_same_day] pairs=181 | median_gap=-2.808 | median_gain=1.857 | wilcoxon_p=0.002041330932893851
+[C2_gap_overnight_or_later_day] pairs=30 | median_gap=-1.527 | median_gain=1.84 | wilcoxon_p=0.20540969260036945
+[C2_gap_per_organoid] organoids=16 | median_of_medians=0.268 | frac_orgs_positive=0.5625
+[D_distribution] organoids_total=16 | organoids_with_ge3_rl=14 | n_median_rl_rho_pos=9 | n_individually_sig_le_p05=7 | n_individually_sig_rho_p05=8 | n_with_controls=10 | n_rl_gt_ctrl_rho=6
+organoid        chip         paradigms  n_rl  n_ctrl  days  median_rl_rho  median_rl_le  frac_rl_rho_pos  median_ctrl_rho  median_ctrl_le  perm_p_le  perm_p_rho
+p001237b     p001237 continuous,cycled    52      15     8       0.148594      9.782105         0.692308        -0.008618       -1.096774   0.000500    0.000500
+   22097       22097        continuous    30       0     3       0.069230      3.775238         0.633333              NaN             NaN   0.006997    0.004998
+   23138       23138 continuous,cycled    27      13     3      -0.047744     -9.217391         0.444444        -0.130999       -5.806452   1.000000    0.905047
+   23133       23133 continuous,cycled    26      24     6       0.117504      1.617148         0.615385        -0.086420       -1.036029   0.027986    0.000500
+  23138b       23138        continuous    24       0     2       0.089234      0.270833         0.708333              NaN             NaN   0.372314    0.000500
+   22064       22064            cycled    13      46     5      -0.064303     -3.140000         0.076923        -0.001965       -0.342480   0.999500    0.992504
+  c20215 c20215-run1            cycled    11      21     4       0.221888      2.520000         0.909091         0.173139        1.120000   0.014493    0.000500
+ p001346     p001346            cycled     8       4     1       0.185747      1.952991         0.750000         0.090524        1.059474   0.000500    0.000500
+ p001068     P001068            cycled     7      14     3       0.054959      0.240000         0.714286         0.055743        0.760000   0.429285    0.122939
+   20217       20217            cycled     6      16     4       0.248718      8.757143         0.833333        -0.035531       -0.150000   0.001000    0.000500
+   21965       21965            cycled     6      12     2      -0.015837     -0.880000         0.500000         0.014715       -1.300000   0.701649    0.609195
+   22194       22194        continuous     5       0     1      -0.140812     -0.600000         0.000000              NaN             NaN   0.820590    0.738131
+   23186       23186        continuous     5       0     1       0.223657     13.631579         0.600000              NaN             NaN   0.017491    0.001499
+ p001515     P001515            cycled     3       6     2      -0.000410     -3.566667         0.333333         0.008178       -0.702998   0.960520    0.586707
+  22064b       22064            cycled     2       4     2      -0.035681     -0.835069         0.000000         0.068271        1.339583        NaN         NaN
+ p001237     P001237            cycled     2      22     2      -0.015459      2.398148         0.500000        -0.018872       -0.614927        NaN         NaN
+WROTE audit08_results.json + audit08_per_organoid.csv
