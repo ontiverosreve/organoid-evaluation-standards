@@ -224,6 +224,8 @@ as accumulating over training cycles/sessions.
 
 **Scoring.** Scored when Audit #8 is published.
 
+**Scored 2026-10-14.** Audit #8 published (audits/audit-08-robbins/). Verdict: PARTIAL. Brier score: 0.14.
+
 ---
 
 ## Prediction 004 — Pavlinek et al. 2026 (KCL KORDS collection)
@@ -281,10 +283,10 @@ against vehicle in paired within-well recordings.
 |---|--------|-----------|-------------|------------|----------|---------|-------|
 | 001 | Iannello et al. 2025 | 2026-10-14 | 0.15 | 0.60 | 0.25 | — open — | — |
 | 002 | Kim et al. 2026 | 2026-10-14 | 0.20 | 0.55 | 0.25 | — open — | — |
-| 003 | Robbins et al. 2025 | 2026-10-14 | 0.10 | 0.70 | 0.20 | — open — | — |
+| 003 | Robbins et al. 2025 | 2026-10-14 | 0.10 | 0.70 | 0.20 | PARTIAL | 0.14 |
 | 004 | Pavlinek et al. 2026 | 2026-10-14 | 0.35 | 0.45 | 0.20 | — open — | — |
 
-**Running mean Brier score:** — (no scored predictions yet)
+**Running mean Brier score:** 0.14 (1 scored prediction)
 
 *This program reports survivals as loudly as failures. If both of these
 predictions score badly, that will be printed here too.*
