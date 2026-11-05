@@ -102,7 +102,7 @@ two_pattern,8,3,8L.mat,8L_EVENT.mat,
 two_pattern,9,1,2_first_learning_L1.mat,2_first_learning_L1.mat,
 two_pattern,9,1,4_first_learning_X.mat,4_first_learning_X.mat,
 two_pattern,9,1,6_second_learning_L1.mat,6_second_learning_L1.mat,
-two_pattern,9,1,9_second_learning_X.mat,,no-exact-match
+two_pattern,9,1,9_second_learning_X.mat,8_second_learning_X.mat,probable-typo-match
 two_pattern,9,2,2_first_learning_L1.mat,2_first_learning_L1.mat,
 two_pattern,9,2,4_first_learning_X.mat,4_first_learning_X.mat,
 two_pattern,9,2,6_second_learning_L1.mat,6_second_learning_L1.mat,

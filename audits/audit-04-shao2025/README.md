@@ -30,7 +30,9 @@ cloned 2026-10-04; no license file in repo — paper is CC-BY). Layout:
   `*_train_*`, `first_learning` variants); SSD↔EVENT pairs were matched by
   normalized stem, then by (pattern-number, family-letter) key, each EVENT file
   used at most once. See `results/file_pairs.csv` for the full pairing log
-  (286 rows; 17 SSD files had no EVENT match and were excluded).
+  (286 rows; 17 SSD files had no EVENT match in the original pass — after the
+  2026-10-27 re-check, 16 remain unmatched and one was recovered as a flagged
+  probable-typo match; see the Update section at the end).
 
 **Data-quality findings (all handled explicitly):**
 1. **Stray files from other sessions.** `two_pattern/culture_4/day_1/SSD/` contains
@@ -45,6 +47,8 @@ cloned 2026-10-04; no license file in repo — paper is CC-BY). Layout:
    culture-days with full pattern sets.
 3. **Suspected filename typo.** two_pattern c8d2: SSD `5X.mat` paired to EVENT
    `5L_EVENT.mat` (number-only match, flagged in `file_pairs.csv`). Kept, flagged.
+   A second probable typo (two_pattern c9d1) was recovered in the 2026-10-27
+   re-check — see the Update section.
 4. **six_pattern c3d3** contains a 7th family letter (`14-Y1`); treated as a 6th
    pattern class like the others.
 5. **six_pattern c5d2/c5d3, c6d2/c6d3**: one pattern has 390 (not 400) pulses.
@@ -87,15 +91,15 @@ not survive honest re-analysis.**
    permutation nulls (0.25/0.167). Binary L-vs-X decoding is ~0.99. The cultures
    do respond differentially to stimulation patterns — this part replicates.
 2. **No significant day-1 → day-3 improvement in either experiment.**
-   - two_pattern (logreg, 5-fold): n=5 full-set cultures, day1 0.973 → day3 0.944,
-     Δ=−0.030, paired t=−1.13, p=0.32. (Lenient n=9 incl. partial days:
+   - two_pattern (logreg, 5-fold): n=6 full-set cultures, day1 0.977 → day3 0.952,
+     Δ=−0.026, paired t=−1.17, p=0.29. (Lenient n=9 incl. partial days:
      Δ=−0.007, p=0.71.) Day-1 accuracy is already at ceiling — the paper itself
      notes "high accuracy achieved on the first day."
    - six_pattern (logreg, 5-fold): n=7, day1 0.896 → day3 0.913, Δ=+0.018,
      paired t=0.76, p=0.48.
-   - RBF-SVM replication (their code's classifier): two_pattern n=6,
-     Δ=−0.052, p=0.22; six_pattern n=8, Δ=+0.084, p=0.23. Not significant either.
-   - Accuracy gains do not track excitability gains (corr(Δrate, Δacc) = −0.09 /
+   - RBF-SVM replication (their code's classifier): two_pattern n=7,
+     Δ=−0.043, p=0.23; six_pattern n=8, Δ=+0.084, p=0.23. Not significant either.
+   - Accuracy gains do not track excitability gains (corr(Δrate, Δacc) = −0.17 /
      +0.26, both n.s.) — but there are no gains to explain.
 3. **The paper's headline six-pattern numbers come from the weaker pipeline.**
    With logistic regression (their stated method), six-pattern day-1 accuracy is
@@ -143,7 +147,7 @@ by culture/day identity with poor cross-day transfer.
 - `file_pairs.csv` — all 286 SSD↔EVENT pairings with flags.
 - `decoding_pattern.csv` — per-(experiment, culture, day, window, scheme)
   pattern-decoding accuracy (N-way + binary L-vs-X rows).
-- `decoding_culture_id.csv` — C1: 10-way culture-ID decoding (0.9398 / 0.8993).
+- `decoding_culture_id.csv` — C1: 10-way culture-ID decoding (0.9407 / 0.8993).
 - `decoding_day_id.csv` — C2: day-ID decoding per culture (mean 0.937 / 0.935).
 - `cross_day_transfer.csv` — C3 (patid-aligned; superseded).
 - `cross_day_transfer_v2.csv` — C3 redone with (pattern-number, family-letter)
@@ -152,7 +156,7 @@ by culture/day identity with poor cross-day transfer.
 - `permutation_nulls.csv` — C4: 20 shuffles per culture-day (≈chance everywhere).
 - `training_claim.csv` — per-culture-day accuracy + mean firing rate.
 - `svm_replication.csv` — RBF-SVM + block scheme per culture/day (the paper's
-  code path): two_pattern day1 0.944 → day3 0.892 (p=0.22); six_pattern
+  code path): two_pattern day1 0.947 → day3 0.904 (p=0.23); six_pattern
   day1 0.678 → day3 0.761 (p=0.23).
 
 ## Key numbers
@@ -161,7 +165,7 @@ Pattern decoding, paper window [10,50] ms, logistic regression, stratified 5-fol
 
 | experiment | day 1 mean | day 3 mean | Δ | paired p | n |
 |---|---|---|---|---|---|
-| two_pattern (4-way) | 0.973 | 0.944 | −0.030 | 0.32 | 5 |
+| two_pattern (4-way) | 0.977 | 0.952 | −0.026 | 0.29 | 6 |
 | six_pattern (6-way) | 0.896 | 0.913 | +0.018 | 0.48 | 7 |
 
 (Paper reported: two-pattern 0.93→0.982; six-pattern ~0.71→0.825, n=10, p<0.05.)
@@ -173,15 +177,15 @@ Window comparison (mean accuracy, 5-fold CV, full pattern sets):
 | [0,2] ms (artifact-only) | 0.985 | 0.985 |
 | [0,50] ms (no blank) | 0.999 | 0.999 |
 | [2,50] ms | 0.998 | 0.998 |
-| [10,50] ms (paper) | 0.960 | 0.902 |
-| [10,200] ms | 0.964 | 0.927 |
-| [10,500] ms | 0.968 | 0.931 |
+| [10,50] ms (paper) | 0.961 | 0.902 |
+| [10,200] ms | 0.965 | 0.927 |
+| [10,500] ms | 0.969 | 0.931 |
 
 Session-identity nulls:
 
 | test | two_pattern | six_pattern | chance |
 |---|---|---|---|
-| culture-ID (C1) | 0.940 | 0.899 | 0.10 |
+| culture-ID (C1) | 0.941 | 0.899 | 0.10 |
 | day-ID within culture (C2, mean) | 0.937 | 0.935 | 0.33 |
 | cross-day transfer d1→d3 (C3v2) | 0.469 | 0.293 | 0.25/0.167 |
 | cross-day transfer d3→d1 (C3v2) | 0.465 | 0.265 | 0.25/0.167 |
@@ -201,6 +205,39 @@ Session-identity nulls:
 - six_pattern cultures 7/8 lack day 3 and culture 9 lacks day 2, capping the
   paired day-1→day-3 test at n=8 (paper reports n=10 — see anomaly (a)).
 - Analysis is private; nothing published, no authors contacted.
+
+## Update — 2026-10-27: file-matching re-check
+
+Prompted by the authors' note (2026-10-16) that inconsistent file/folder
+naming in the deposit might have caused missed SSD↔EVENT matches, every
+unmatched file was re-checked against all naming variants (dashes,
+underscores, `first_learning`/`second_learning` tags, case), and every EVENT
+file was reverse-checked against the pairing log:
+
+- **16 of the 17 originally unmatched SSD files have no EVENT counterpart
+  under any name** — the stimulation-time files are absent from the deposit.
+  The broader "missed matches" concern is not supported by the file
+  inventory.
+- **One genuine miss — two_pattern culture 9, day 1.** SSD
+  `9_second_learning_X.mat` vs EVENT `8_second_learning_X.mat`: a probable
+  filename typo in the deposit (both folders otherwise follow a 2-4-6-8
+  sequence, and the EVENT `8` file was the only unpaired EVENT file in the
+  whole dataset, 1 of 270). It is now paired and flagged
+  `probable-typo-match` in `results/file_pairs.csv` — never treated as an
+  exact match — making c9d1 a full 4-pattern culture-day.
+- **Effect of re-running the unchanged pipeline with this one pairing
+  added** (two_pattern headline numbers; all six_pattern decoding,
+  training-claim and SVM numbers are identical):
+  logistic-regression full-set paired test n=5 → 6, day1 0.973 → 0.977,
+  day3 0.944 → 0.952, Δ −0.030 → −0.026, paired p 0.32 → 0.29; RBF-SVM
+  replication n=6 → 7, Δ −0.052 → −0.043, p 0.22 → 0.23; culture-ID
+  accuracy 0.9398 → 0.9407; paper-window mean 0.960 → 0.961. Permutation-null
+  rows downstream of c9d1 in `permutation_nulls.csv` also shifted slightly
+  because the shared RNG stream now advances past a 1600-trial day instead
+  of 1200 (all remain at chance).
+- **The verdict is unchanged:** every day-1 → day-3 comparison remains
+  non-significant, and the "training improves recognition" claim still does
+  not replicate.
 
 ## Files
 

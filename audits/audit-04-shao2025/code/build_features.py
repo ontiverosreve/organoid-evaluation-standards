@@ -17,6 +17,19 @@ OUT = os.path.expanduser('~/workspace/reservoir-eeg/work/audit_shao2025')
 CACHE = os.path.join(OUT, 'cache')
 os.makedirs(CACHE, exist_ok=True)
 
+# Documented manual pairing overrides, added 2026-10-27 for the Audit #4
+# file-matching re-check (see recheck-file-matching-2026-10-21.md).
+# two_pattern c9 d1: SSD lists '9_second_learning_X.mat' where the EVENT
+# folder has '8_second_learning_X.mat'. Both folders otherwise follow a
+# 2-4-6-8 sequence, and the EVENT 8 file is the ONLY unpaired EVENT file in
+# the whole dataset (1 of 270). The SSD '9' is a probable filename typo for
+# '8' (same family X, same second_learning tag). Approved by Reve 2026-10-27
+# as a flagged 'probable-typo-match' — never an exact match.
+TYPO_OVERRIDES = {
+    ('two_pattern', 9, 1): ('9_second_learning_X.mat',
+                            '8_second_learning_X.mat'),
+}
+
 WINDOWS = {
     'paper':   (0.010, 0.050),   # paper's own window (10-50 ms)
     'noblank': (0.000, 0.050),   # no artifact blanking
@@ -124,6 +137,23 @@ def main():
                             if (pair_log[i][0] == exp and pair_log[i][1] == cult
                                     and pair_log[i][2] == day and pair_log[i][3] == sf):
                                 pair_log[i] = (exp, cult, day, sf, None, 'AMBIGUOUS-key')
+                                break
+                # pass 3: flagged probable-typo overrides (TYPO_OVERRIDES).
+                # Applies only when the SSD file is still unmatched and the
+                # EVENT file is still unused; logged as 'probable-typo-match'.
+                ov = TYPO_OVERRIDES.get((exp, cult, day))
+                if ov:
+                    osf, oef = ov
+                    if osf in ssd_files and oef in ev_files \
+                            and osf not in paired_ssd and oef not in used_ev:
+                        pairs.append((osf, oef, 'probable-typo-match'))
+                        used_ev.add(oef)
+                        paired_ssd.add(osf)
+                        for i in range(len(pair_log) - 1, -1, -1):
+                            if (pair_log[i][0] == exp and pair_log[i][1] == cult
+                                    and pair_log[i][2] == day and pair_log[i][3] == osf):
+                                pair_log[i] = (exp, cult, day, osf, oef,
+                                               'probable-typo-match')
                                 break
                 if not pairs:
                     continue
